@@ -1,18 +1,23 @@
-package com.simplevkclient;
+package com.simplevkclient.photo;
 
 import android.app.Activity;
 import android.content.ContentProviderOperation;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import com.simplevkclient.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.lang.reflect.AccessibleObject;
 import java.util.ArrayList;
 
 /**
@@ -25,6 +30,7 @@ public class AddPhoto extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
         String id = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;

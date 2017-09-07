@@ -1,4 +1,4 @@
-package com.simplevkclient;
+package com.simplevkclient.photo;
 
 
         import java.io.File;
@@ -18,6 +18,8 @@ package com.simplevkclient;
         import android.provider.ContactsContract.Data;
         import android.provider.ContactsContract.CommonDataKinds.Photo;
         import android.util.Log;
+
+        import com.simplevkclient.R;
 
 public class ContactPhotoHelper {
 
@@ -80,7 +82,7 @@ public class ContactPhotoHelper {
         InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, uri);
         if (input == null) {
             Resources res = context.getResources();
-            return BitmapFactory.decodeResource(res, R.drawable.kon);
+
         }
         return BitmapFactory.decodeStream(input);
     }

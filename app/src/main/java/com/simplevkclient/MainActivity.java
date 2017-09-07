@@ -1,21 +1,18 @@
 package com.simplevkclient;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.provider.ContactsContract;
+
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
@@ -27,27 +24,31 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.util.VKUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private String scope[] = new String[]{VKScope.MESSAGES, VKScope.FRIENDS, VKScope.WALL};
     ListView mListView;
+    Button addbut;
+    int count = 0;
+    TextView numfriends;
+    static public ArrayList<Friend> Friends = new ArrayList<>();
 
-    private Bitmap contactPhoto = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        numfriends = (TextView) findViewById(R.id.count);
+        addbut = (Button) findViewById(R.id.add);
+        //Friends.clear();
+        Friends.clear();
+        count = 0;
         VKSdk.login(this, scope);
     }
 
@@ -56,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
                 @Override
                 public void onResult(VKAccessToken res) {
-                    mListView = (ListView) findViewById(R.id.list_view);
+                    //mListView = (ListView) findViewById(R.id.list_view);
                     Toast.makeText(getApplicationContext(), "ok", Toast.LENGTH_SHORT).show();
-                    VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "contacts"));
-                    //Log.i("ok", request.toString());
+                    VKRequest request = VKApi.friends().get(VKParameters.from(VKApiConst.FIELDS, "contacts,photo_max_orig"));
                     request.executeWithListener(new VKRequest.VKRequestListener() {
                     @Override
                     public void onComplete(VKResponse response) {
                         super.onComplete(response);
+                        //Log.i("ok", response.json.toString());
                         VKList list = (VKList) response.parsedModel;
                         JSONObject friend = null;
                         long lenght=0;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        //Log.i("ok", lenght+"");
                         for(int i=0; i<lenght; i++){
                             try {
                                 friend = (JSONObject) response.json.getJSONObject("response").getJSONArray("items").get(i);
@@ -79,19 +81,40 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             try {
-                                if(friend.get("mobile_phone").toString()!=null) {
-                                    String name = friend.get("mobile_phone").toString();
-                                    name+=" "+friend.get("first_name").toString()+" "+friend.get("second_name");
-                                    Log.i("ok", name);
+                                String number = friend.get("mobile_phone").toString();
+                                Pattern pattern = Pattern.compile("^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$");
+                                Matcher matcher = pattern.matcher(number);
+                                if(matcher.matches()){
+                                    //Log.i("ok", "valid"+number);
+                                    String num = friend.get("mobile_phone").toString();
+                                    String name = friend.get("first_name").toString();
+                                    String fam = friend.get("last_name").toString();
+                                    Friend newfr = new Friend(name, fam, num);
+                                    Log.i("ok", name+" "+fam+" "+num);
+                                    Friends.add(count,newfr);
+                                    count++;
+                                }
+                                else {
+                                    //Log.i("ok", "invalid"+number);
                                 }
                             } catch (JSONException e) {
-                                continue;
+                                e.printStackTrace();
                             }
                         }
+                        String numfr = String.valueOf(count);
+                        numfriends.setText(numfr);
+                        addbut.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(MainActivity.this, AddToContacts.class);
+                                Toast.makeText(getApplicationContext(), "Начало синхронизации...", Toast.LENGTH_SHORT).show();
+                                //startActivity(i);
+                                //finish();
+                                addbut.setEnabled(false);
+                                new asyncadd(getApplication()).execute();
+                            }
+                        });
 
-                        //Log.i("ok", response.json.toString());
-//                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, list);
-//                        mListView.setAdapter(arrayAdapter);
                     }
                 });
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/mark"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@color/vk_color"
+        android:text="Оценить нас в Google Play"
+        android:textColor="?attr/colorBackgroundFloating"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="87dp"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="224dp"
+        android:text="Готово!"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@color/vk_color"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mark"
+        android:layout_alignStart="@+id/mark"
+        android:layout_below="@+id/mark"
+        android:layout_marginTop="12dp"
+        android:background="@color/vk_share_link_color"
+        android:text="Выход"
+        android:textColor="@android:color/white"/>
+</RelativeLayout>

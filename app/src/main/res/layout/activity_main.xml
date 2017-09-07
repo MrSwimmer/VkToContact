@@ -6,10 +6,51 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/list_view"/>
-    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="199dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Ваших друзей ВК, которых можно добавить в Контакты:"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/vk_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/vk_black"
+            android:textSize="28sp"/>
+
+        <Button
+            android:id="@+id/add"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/count"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="63dp"
+            android:background="@color/vk_color"
+            android:text="Добавить"
+            android:textColor="?attr/colorBackgroundFloating"/>
+    </RelativeLayout>
+</LinearLayout>
 
 
